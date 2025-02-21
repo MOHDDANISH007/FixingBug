@@ -13,8 +13,8 @@ const CreateTask = () => {
 
 
   const handler = (e) => {
-    e.preventDefault()
-
+    e.preventDefault();
+  
     const newTask = {
       taskTitle,
       description,
@@ -25,15 +25,34 @@ const CreateTask = () => {
       newTask: true,
       completed: false,
       failed: false
-    }
-    setTask([...task, newTask])
-    console.log({taskTitle, description, taskDate, taskCategory, assignTo})
-    setTaskTitle('')
-    setDescription('')
-    setTaskDate('')
-    setTaskCategory('')
-    setAssignTo('')
-  }
+    };
+  
+    setTask([...task, newTask]);
+    console.log("New Task => ", newTask);
+  
+    // Get the data from local storage
+    const data = JSON.parse(localStorage.getItem('employees'));
+    console.log("I am from CreateTask Component and Data => ", data);
+  
+    // Update the tasks for the assigned employee
+    data.forEach((element) => {
+      if (element.firstName === assignTo) {
+        element.tasks.push(newTask);
+      }
+    });
+  
+    // Save the updated data back to local storage
+    localStorage.setItem('employees', JSON.stringify(data));
+  
+    // Reset the form fields
+    setTaskTitle('');
+    setDescription('');
+    setTaskDate('');
+    setTaskCategory('');
+    setAssignTo('');
+  };
+
+
   return (
     <div className='mt-10'>
       <form onSubmit={handler} className='flex flex-wrap gap-5 justify-between'>
